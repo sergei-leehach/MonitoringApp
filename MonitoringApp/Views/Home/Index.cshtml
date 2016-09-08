@@ -4,38 +4,43 @@
 
 <div ng-app="Application">
     <div ng-controller="AppCtrl" ng-init="GetDrives()">
-        <div class="row" ng-class="{notloaded: !isLoading, loaded: isLoading}">
-            <b id="wait">Loading... Please wait.</b><img src="/Content/loading.gif" />
+        @*<div class="row" ng-class="{notloaded: !isLoading, loaded: isLoading}">
+                <b id="wait">Loading... Please wait.</b>
+            </div>*@
+        <table class="table table-bordered">
+            <tr>
+                <th>Less 10Mb</th>
+                <th>10Mb-50Mb</th>
+                <th>More 100Mb</th>
+            </tr>
+            <tr ng-class="{notloaded: !isLoading, loaded: isLoading}">
+                <td><img src="/Content/loading.gif" /></td>
+                <td><img src="/Content/loading.gif" /></td>
+                <td><img src="/Content/loading.gif" /></td>
+            </tr>
+            <tr ng-class="{notloaded: isLoading, loaded: !isLoading}">
+                <td>{{ counter.Less10Mb }}</td>
+                <td>{{ counter.From10MbTo50Mb }}</td>
+                <td>{{ counter.More100Mb }}</td>
+            </tr>
+        </table>
+
+        <div id="path">
+            <b>Current path: </b>{{ path }}
         </div>
-        <div class="row" ng-class="{notloaded: isLoading, loaded: !isLoading}">
-            <table class="table table-bordered">
-                <tr>
-                    <th>Less 10Mb</th>
-                    <th>10Mb-50Mb</th>
-                    <th>More 100Mb</th>
-                </tr>
-                <tr>
-                    <td>{{ counter.Less10Mb }}</td>
-                    <td>{{ counter.From10MbTo50Mb }}</td>
-                    <td>{{ counter.More100Mb }}</td>
-                </tr>
-            </table>
-            <div id="path">
-                <b>Current path: </b>{{ path }}
+        <div id="wrapper">
+            <div>
+                <a id="parent" ng-click="GetDirectory(parent)">...</a>
             </div>
-            <div id="wrapper">
-                <div>
-                    <a id="parent" ng-click="GetDirectory(parent)">...</a>
-                </div>
-                <div ng-repeat="directory in directories">
-                    <a ng-click="GetDirectory(path + directory)">{{ directory }}</a>
-                </div>
-                <div>
-                    <p id="file" ng-repeat="file in files">{{ file }}</p>
-                </div>
+            <div ng-repeat="directory in directories">
+                <a ng-click="GetDirectory(path + directory)">{{ directory }}</a>
+            </div>
+            <div>
+                <p id="file" ng-repeat="file in files">{{ file }}</p>
             </div>
         </div>
     </div>
 </div>
+
 
 

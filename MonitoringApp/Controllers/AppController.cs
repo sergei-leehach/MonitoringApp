@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
-using AngularJSApp.Models;
-using AngularJSApp.Repository;
+﻿using System.Web.Http;
+using MonitoringApp.Models;
+using MonitoringApp.Repository;
 
-namespace AngularJSApp.Controllers
+namespace MonitoringApp.Controllers
 {   
     public class AppController : ApiController
     {
@@ -18,7 +16,7 @@ namespace AngularJSApp.Controllers
 
         public Node Get(string path)
         {
-            var node = _repository.GetCount(path);
+            var node = _repository.GetNode(path);
             return node;
         }     
     }

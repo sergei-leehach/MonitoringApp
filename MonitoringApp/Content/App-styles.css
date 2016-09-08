@@ -16,12 +16,10 @@
 
 .notloaded {
     display: none;
-    /*visibility: collapse;*/
 }
 
 .loaded {
-    display: block;
-    /*visibility: visible;*/
+    display: table-row;
 }
 
 a {

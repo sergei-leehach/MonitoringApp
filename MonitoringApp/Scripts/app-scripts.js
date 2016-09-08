@@ -1,11 +1,13 @@
 ﻿angular
     .module("Application", [])
-    .controller("AppCtrl", function ($scope, $http) {
-        $scope.isLoading = false;
+    .controller("AppCtrl", function ($scope, $http, $q) {
+        var canceller = $q.defer();
+        var isRequest = false;
 
         $scope.GetDrives = function () {
             var url = "/api/App";
-            get(url, false);
+            var counterUrl = "/api/Counter";
+            get(url, counterUrl, false);
         }
 
         $scope.GetDirectory = function (path) {
@@ -13,14 +15,15 @@
                 $scope.GetDrives();
             } else {
                 var url = "/api/App?path=" + encodeURIComponent(path);
-                get(url, true);
+                var counterUrl = "/api/Counter?path=" + encodeURIComponent(path);
+                get(url, counterUrl, true);
             }
         }
 
-        function get (url, showParent) {
+        function get(url, counterUrl, showParent) {
             $scope.isLoading = true;
+
             $http.get(url).success(function (response) {
-                $scope.counter = response.Counter;
                 $scope.files = response.Files;
                 $scope.directories = response.Directories;
                 $scope.parent = response.ParentNode;
@@ -31,8 +34,16 @@
                 } else {
                     $("#parent").hide();
                 }
-
-                $scope.isLoading = false;
+                if (isRequest) {
+                    canceller.resolve();
+                }
+                isRequest = true;
+                canceller = $q.defer();
+                $http.get(counterUrl, { timeout: canceller.promise }).success(function (data) {
+                    $scope.counter = data;
+                    $scope.isLoading = false;
+                    isRequest = false;
+                });
             });
-        }                 
+        }
     })

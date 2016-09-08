@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using AngularJSApp.Models;
+using MonitoringApp.Models;
 
-namespace AngularJSApp.Repository
+namespace MonitoringApp.Repository
 {
     public class AppRepository
     {
@@ -18,12 +16,23 @@ namespace AngularJSApp.Repository
             foreach (var drive in drives)
             {
                 node.Directories.Add(drive);
-                node.Counter += GetFileCounter(drive);
             }
             return node;
         }
 
-        public Node GetCount(string path)
+        public Counter GetCounter()
+        {
+            var drives = Environment.GetLogicalDrives();
+            Counter counter = new Counter();
+
+            foreach (var drive in drives)
+            {
+                counter += GetFileCounter(drive);
+            }
+            return counter;
+        }
+
+        public Node GetNode(string path)
         {
             Node node = new Node();
             if (Directory.GetParent(path) != null)
@@ -37,26 +46,25 @@ namespace AngularJSApp.Repository
             }
             node.Directories = GetDirectories(node.Path).ToList();
             node.Files = GetFiles(node.Path).ToList();
-            node.Counter = GetFileCounter(node.Path);
             return node;
         }
 
-        private static Counter GetFileCounter(string path)
+        public Counter GetFileCounter(string path)
         {
             Counter counter = new Counter();
             foreach (var file in GetFiles(path))
             {
                 var fileLength = new FileInfo(path + file).Length;
 
-                if (fileLength <= 10000000)
+                if (fileLength <= 10485760)
                 {
                     counter.Less10Mb++;
                 }
-                if (fileLength > 10000000 && fileLength < 50000000)
+                if (fileLength > 10485760 && fileLength < 52428800)
                 {
                     counter.From10MbTo50Mb++;
                 }
-                if (fileLength > 100000000)
+                if (fileLength > 104857600)
                 {
                     counter.More100Mb++;
                 }
