@@ -1,0 +1,29 @@
+﻿#path {
+    padding: 0 0 8px 8px;
+}
+
+#wrapper {
+    padding-left: 10px;
+}
+
+#file {
+    margin: 0;
+}
+
+#wait {
+    font-size: 20px;
+}
+
+.notloaded {
+    display: none;
+    /*visibility: collapse;*/
+}
+
+.loaded {
+    display: block;
+    /*visibility: visible;*/
+}
+
+a {
+    cursor: pointer;
+}
